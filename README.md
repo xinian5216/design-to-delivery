@@ -26,7 +26,7 @@ your-project/
 
 想在 Antigravity App 的多个项目中使用，可以放到 `~/.gemini/config/skills/design-to-delivery/SKILL.md`。其他客户端请使用各自的技能目录。不同版本的目录约定见 [Antigravity 官方说明](https://antigravity.google/docs/skills)。
 
-**从旧版迁移**：仓库地址不变。用新版替换旧文件，并把本地技能目录从 `design-to-frontend` 改为 `design-to-delivery`。阶段名称不变，已有的 `design-handoff/` 交接文件可以继续用。
+**从旧版迁移**：仓库已更名为 [`design-to-delivery`](https://github.com/xinian5216/design-to-delivery)。用新版替换旧文件，把本地技能目录从 `design-to-frontend` 改为 `design-to-delivery`，之后用 `/design-to-delivery` 调用。阶段名称不变，已有的 `design-handoff/` 交接文件可以继续用。
 
 ## 示例
 
