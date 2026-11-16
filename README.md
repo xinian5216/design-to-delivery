@@ -1,49 +1,59 @@
-# design-to-frontend
+# design-to-delivery
 
-让 Opus 定稿，让 Gemini 按稿实现。用同一页可运行的设计样板和截图，把设计决策交到编码模型手里，避免落地时重新发明一套版式。
+先把方案写成可验收的基准，再交给编码模型实现。适用于前端、后端 API、插件 / 扩展、CLI、SDK、自动化和游戏功能，也可用于现有项目的重构或集成。
 
-| 阶段 | 建议使用 | 产出 |
+原来的「Opus 定稿、Gemini 实现、Opus 复核」仍然能用。模型可替换，也可以由同一个模型完成。这个 Skill 不会自动切模型，不需要接新 API。
+
+| 阶段 | 做什么 | 交什么 |
 | --- | --- | --- |
-| `design` | Claude Opus 5.5 | 一页可运行的样板、桌面和移动端截图、交接说明 |
-| `implement` | Gemini 4 Carbon，或使用 Hydrogen / Argon | 按定稿实现目标页面，保留项目技术栈并验证交互 |
-| `review` | Claude Opus 5.5，或你指定的模型 | 按优先级列出实现与定稿的差异 |
+| `design` | 定范围、关键决策和验收条件，不改产品代码 | 交接说明及必要的原型、接口样例或测试用例 |
+| `implement` | 按基准实现，先跑通一条主路径 | 可运行的改动，以及实际执行的检查结果 |
+| `review` | 对照基准验收，默认不改代码 | 按影响排序的偏差、复现方法与未验证项 |
+
+同一套流程，不同项目只换验收依据。前端用参考样板和同条件截图，API 用契约和测试，插件用目标宿主里的实测。小改动用几条验收条件就够。跨模型或复杂任务没有既定交接目录时，用 `handoff/<task>/handoff.md`，再附上基准样例。
 
 ## 安装到 Antigravity
 
-打开 [SKILL.md](./SKILL.md)，用 **Raw** 保存为 `SKILL.md`，放进项目的 `.agents/skills/design-to-frontend/` 目录。仓库只有这一个文件是运行所必需的。
+打开 [SKILL.md](./SKILL.md)，用 **Raw** 保存为 `SKILL.md`，放进项目的 `.agents/skills/design-to-delivery/` 目录。仓库仍只需要这一个文件。
 
 ```text
 your-project/
 └── .agents/
     └── skills/
-        └── design-to-frontend/
+        └── design-to-delivery/
             └── SKILL.md
 ```
 
-如果想在 Antigravity App 的所有项目中使用，放到 `~/.gemini/config/skills/design-to-frontend/SKILL.md`。也可参照 [Antigravity 官方安装说明](https://antigravity.google/docs/skills) 放入不同客户端的技能目录。
+想在 Antigravity App 的多个项目中使用，可以放到 `~/.gemini/config/skills/design-to-delivery/SKILL.md`。其他客户端请使用各自的技能目录。不同版本的目录约定见 [Antigravity 官方说明](https://antigravity.google/docs/skills)。
 
-## 用法
+**从旧版迁移**：仓库地址不变。用新版替换旧文件，并把本地技能目录从 `design-to-frontend` 改为 `design-to-delivery`。阶段名称不变，已有的 `design-handoff/` 交接文件可以继续用。
 
-**1. 选 Opus，先做一页样板**
+## 示例
 
-```text
-/design-to-frontend design 给我的作品集做一版首页样板，先别改现有页面。
-```
-
-默认交接目录是 `design-handoff/<page>/`，内含可运行的样板、截图和 `handoff.md`。
-
-**2. 确认样板后，切到 Gemini 按稿实现**
+**浏览器扩展｜设计、实现、验收**
 
 ```text
-/design-to-frontend implement 读取 design-handoff/home/handoff.md，按定稿实现首页，保留现有技术栈，截 1440px 和 390px 验收。
+/design-to-delivery design 设计一个标签页分组扩展。先定 MVP、Chrome 版本、所需权限，以及权限被拒时的行为。交付方案，先别写产品代码。
 ```
-
-把 `home` 换成设计阶段实际产出的目录名。两个模型不在同一个客户端时，把交接目录交给实现模型即可。
-
-**3. 有需要再做一轮审稿**
 
 ```text
-/design-to-frontend review 对照样板和实现截图，列出最影响观感的三处差异，先不改代码。
+/design-to-delivery implement 读取 handoff/tab-groups/handoff.md，按方案实现，并记录目标浏览器的安装与关键路径检查结果。
 ```
 
-这是工作流说明，不会自动切模型，也不需要配置新的 API。
+```text
+/design-to-delivery review 对照交接说明检查扩展，重点看权限申请、拒绝后能否继续使用，以及重启后能否恢复分组。只报告问题。
+```
+
+`tab-groups` 换成实际生成的任务目录名。跨客户端时，把交接目录和下一阶段提示一起交给实现模型。
+
+**后端 API｜做到成品**
+
+```text
+/design-to-delivery 给现有订单 API 加幂等提交。保留现有接口，先定重复请求和冲突时的响应，再实现并验证不会创建第二条订单。
+```
+
+**前端｜继续沿用旧交接物**
+
+```text
+/design-to-delivery implement 读取 design-handoff/home/handoff.md，按样板实现首页，保留现有技术栈，并用桌面与移动端截图验收。
+```
